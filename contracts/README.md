@@ -1,66 +1,85 @@
-## Foundry
+# Veridium Smart Contracts
 
-**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
+Smart contracts for the Veridium discourse platform built on Base.
 
-Foundry consists of:
+## Contracts
 
-- **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
-- **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
-- **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
-- **Chisel**: Fast, utilitarian, and verbose solidity REPL.
+### Core Contracts
 
-## Documentation
+- **SessionFactory.sol**: Factory contract for creating discourse sessions
+- **WagerPool.sol**: Manages wagers and prize distribution for individual sessions
 
-https://book.getfoundry.sh/
+### Interfaces
 
-## Usage
+- **ISessionFactory.sol**: SessionFactory interface
+- **IWagerPool.sol**: WagerPool interface
 
-### Build
+### Mocks
 
-```shell
-$ forge build
+- **MockUSDC.sol**: Mock USDC token for testing (DO NOT use in production)
+
+## Build & Test
+
+```bash
+# Install dependencies
+forge install
+
+# Build contracts
+forge build
+
+# Run tests
+forge test
+
+# Run tests with gas report
+forge test --gas-report
+
+# Run tests with coverage
+forge coverage
 ```
 
-### Test
+## Deployment
 
-```shell
-$ forge test
+### Base Sepolia (Testnet)
+
+```bash
+# Set environment variables
+export PRIVATE_KEY=your_private_key
+export PLATFORM_WALLET=0x...
+
+# Deploy to Base Sepolia
+forge script script/Deploy.s.sol:Deploy --rpc-url base_sepolia --broadcast --verify
 ```
 
-### Format
+### Base Mainnet
 
-```shell
-$ forge fmt
+```bash
+# Set environment variables
+export PRIVATE_KEY=your_private_key
+export PLATFORM_WALLET=0x...
+
+# Deploy to Base Mainnet
+forge script script/DeployMainnet.s.sol:DeployMainnet --rpc-url base_mainnet --broadcast --verify
 ```
 
-### Gas Snapshots
+## Contract Addresses
 
-```shell
-$ forge snapshot
-```
+### Base Sepolia
 
-### Anvil
+- SessionFactory: TBD
+- MockUSDC: TBD
 
-```shell
-$ anvil
-```
+### Base Mainnet
 
-### Deploy
+- SessionFactory: TBD
+- USDC: `0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913`
 
-```shell
-$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
-```
+## Security
 
-### Cast
+- Uses OpenZeppelin contracts for security best practices
+- Implements ReentrancyGuard for state-changing functions
+- Access control via Ownable pattern
+- SafeERC20 for token transfers
 
-```shell
-$ cast <subcommand>
-```
+## License
 
-### Help
-
-```shell
-$ forge --help
-$ anvil --help
-$ cast --help
-```
+MIT
