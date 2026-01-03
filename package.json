@@ -4,10 +4,19 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "pnpm --parallel --stream run dev",
+    "dev:frontend": "pnpm --filter frontend dev",
+    "dev:backend": "pnpm --filter backend dev",
+    "build": "pnpm --recursive run build",
+    "build:frontend": "pnpm --filter frontend build",
+    "build:backend": "pnpm --filter backend build",
+    "build:contracts": "cd contracts && forge build",
+    "test": "pnpm --recursive run test",
+    "test:contracts": "cd contracts && forge test",
     "prepare": "husky",
     "lint": "eslint .",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "clean": "pnpm --recursive exec rm -rf dist build .next node_modules"
   },
   "lint-staged": {
     "*.{ts,tsx}": [
