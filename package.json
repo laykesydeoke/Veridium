@@ -1,0 +1,56 @@
+{
+  "name": "veridium",
+  "version": "0.1.0",
+  "description": "A decentralized discourse platform where truth is refined through structured argumentation on Base",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/laykesydeoke/Veridium.git"
+  },
+  "scripts": {
+    "dev": "pnpm --parallel --stream run dev",
+    "dev:frontend": "pnpm --filter frontend dev",
+    "dev:backend": "pnpm --filter backend dev",
+    "build": "pnpm --recursive run build",
+    "build:frontend": "pnpm --filter frontend build",
+    "build:backend": "pnpm --filter backend build",
+    "build:contracts": "cd contracts && forge build",
+    "test": "pnpm --recursive run test",
+    "test:contracts": "cd contracts && forge test",
+    "prepare": "husky",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "clean": "pnpm --recursive exec rm -rf dist build .next node_modules"
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md}": [
+      "prettier --write"
+    ]
+  },
+  "keywords": [
+    "blockchain",
+    "base",
+    "onchainkit",
+    "debate",
+    "discourse",
+    "web3",
+    "cryptocurrency"
+  ],
+  "author": "Veridium Team",
+  "license": "MIT",
+  "packageManager": "pnpm@10.17.0",
+  "devDependencies": {
+    "@eslint/js": "^9.39.2",
+    "@typescript-eslint/eslint-plugin": "^8.51.0",
+    "@typescript-eslint/parser": "^8.51.0",
+    "eslint": "^9.39.2",
+    "eslint-config-prettier": "^10.1.8",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7",
+    "prettier": "^3.7.4"
+  }
+}
