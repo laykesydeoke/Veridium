@@ -4,6 +4,8 @@ pragma solidity ^0.8.24;
 import "forge-std/Script.sol";
 import "../src/SessionFactory.sol";
 import "../src/AssessmentManager.sol";
+import "../src/CredibilityRegistry.sol";
+import "../src/AchievementNFT.sol";
 
 /// @title DeployMainnet
 /// @notice Mainnet deployment script for Veridium contracts
@@ -25,6 +27,18 @@ contract DeployMainnet is Script {
         // Deploy SessionFactory with real USDC
         SessionFactory factory = new SessionFactory(USDC_MAINNET, platformWallet);
         console.log("SessionFactory deployed at:", address(factory));
+
+        // Deploy CredibilityRegistry
+        CredibilityRegistry credibilityRegistry = new CredibilityRegistry();
+        console.log("CredibilityRegistry deployed at:", address(credibilityRegistry));
+
+        // Deploy AchievementNFT
+        AchievementNFT achievementNFT = new AchievementNFT("Veridium Achievements", "VACH");
+        console.log("AchievementNFT deployed at:", address(achievementNFT));
+
+        // Authorize contracts to interact with each other
+        credibilityRegistry.addAuthorizedUpdater(address(assessmentManager));
+        achievementNFT.addAuthorizedMinter(address(credibilityRegistry));
 
         vm.stopBroadcast();
     }
