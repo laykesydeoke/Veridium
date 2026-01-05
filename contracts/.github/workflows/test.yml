@@ -1,0 +1,32 @@
+name: Test Smart Contracts
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - "contracts/**"
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - "contracts/**"
+
+jobs:
+  test:
+    name: Run Foundry Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+
+      - name: Run tests
+        working-directory: contracts
+        run: forge test -vv
+
+      - name: Run snapshot
+        working-directory: contracts
+        run: forge snapshot --check
