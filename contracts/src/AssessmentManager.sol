@@ -4,7 +4,7 @@ pragma solidity ^0.8.24;
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 import "./interfaces/IAssessmentManager.sol";
-import "./interfaces/IWagerPool.sol";
+import "./WagerPool.sol";
 
 /// @title AssessmentManager
 /// @notice Manages discourse session evaluations, scoring, and reward distribution
@@ -140,7 +140,7 @@ contract AssessmentManager is IAssessmentManager, Ownable, ReentrancyGuard {
         address poolAddress = sessionPools[sessionId];
         if (poolAddress == address(0)) return false;
 
-        IWagerPool pool = IWagerPool(poolAddress);
+        WagerPool pool = WagerPool(poolAddress);
 
         // Cannot be the creator or challenger
         if (evaluator == pool.creator() || evaluator == pool.challenger()) {
