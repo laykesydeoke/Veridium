@@ -1,4 +1,14 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Veridium Frontend
+
+Frontend application for Veridium - a decentralized discourse platform built on Base.
+
+## Tech Stack
+
+- **Framework**: Next.js 16 with App Router
+- **Styling**: Tailwind CSS 4
+- **Type Safety**: TypeScript
+- **UI Components**: Custom design system
+- **Web3**: OnchainKit (coming soon)
 
 ## Getting Started
 
