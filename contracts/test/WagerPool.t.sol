@@ -39,7 +39,7 @@ contract WagerPoolTest is Test {
         vm.stopPrank();
 
         assertEq(pool.getPrizePool(), wagerAmount);
-        assertEq(pool.getStatus(), IWagerPool.SessionStatus.Pending);
+        assertEq(uint8(pool.getStatus()), uint8(IWagerPool.SessionStatus.Pending));
     }
 
     function testDepositWagerBothParticipants() public {
@@ -56,7 +56,7 @@ contract WagerPoolTest is Test {
         vm.stopPrank();
 
         assertEq(pool.getPrizePool(), wagerAmount * 2);
-        assertEq(pool.getStatus(), IWagerPool.SessionStatus.Active);
+        assertEq(uint8(pool.getStatus()), uint8(IWagerPool.SessionStatus.Active));
     }
 
     function testCannotDepositWithoutApproval() public {
