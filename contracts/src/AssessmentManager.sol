@@ -5,11 +5,13 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 import "./interfaces/IAssessmentManager.sol";
 import "./WagerPool.sol";
+import "./libraries/AssessmentLib.sol";
 
 /// @title AssessmentManager
 /// @notice Manages discourse session evaluations, scoring, and reward distribution
 /// @dev Uses weighted scoring based on evaluator credibility
 contract AssessmentManager is IAssessmentManager, Ownable, ReentrancyGuard {
+    using AssessmentLib for *;
     /// @notice Minimum number of evaluations required to finalize results
     uint256 public constant MIN_EVALUATIONS = 3;
 
@@ -90,14 +92,12 @@ contract AssessmentManager is IAssessmentManager, Ownable, ReentrancyGuard {
 
         SessionResult storage result = sessionResults[sessionId];
 
-        // Determine final verdict based on weighted scores
-        if (result.creatorScore > result.challengerScore && result.creatorScore > result.drawScore) {
-            finalVerdict = Verdict.Creator;
-        } else if (result.challengerScore > result.creatorScore && result.challengerScore > result.drawScore) {
-            finalVerdict = Verdict.Challenger;
-        } else {
-            finalVerdict = Verdict.Draw;
-        }
+        // Determine final verdict using library function
+        finalVerdict = AssessmentLib.determineWinner(
+            result.creatorScore,
+            result.challengerScore,
+            result.drawScore
+        );
 
         result.finalVerdict = finalVerdict;
         result.finalized = true;
