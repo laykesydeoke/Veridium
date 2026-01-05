@@ -10,9 +10,13 @@ Veridium's smart contract architecture is designed for security, gas efficiency,
 SessionFactory (Main Entry Point)
     ├─> WagerPool (Per-Session Instance)
     ├─> AssessmentManager (Evaluation & Scoring)
+    ├─> CredibilityRegistry (Reputation Tracking)
+    ├─> AchievementNFT (Soulbound Achievements)
     └─> Libraries
-            ├─> Constants
-            └─> Errors
+            ├─> AssessmentLib
+            ├─> AchievementUnlocker
+            ├─> AssessmentConstants
+            └─> AssessmentErrors
 ```
 
 ## Core Contracts
@@ -69,6 +73,43 @@ SessionFactory (Main Entry Point)
 - Access control via Ownable for result finalization
 - Eligibility checks to prevent conflicts of interest
 - Duplicate evaluation prevention
+
+### CredibilityRegistry.sol
+
+**Purpose**: Manages onchain reputation scores for participants and evaluators
+
+**Key Features**:
+
+- Tracks credibility scores, sessions participated/won, evaluations submitted
+- Calculates evaluator weights (100-1000) based on credibility
+- Maintains credibility history for transparency
+- Determines evaluator eligibility (minimum 50 credibility)
+- Provides leaderboard and accuracy metrics
+
+**Security**:
+
+- ReentrancyGuard on all state-changing functions
+- Authorized updaters pattern for score modifications
+- Access control via Ownable
+
+### AchievementNFT.sol
+
+**Purpose**: Mints soulbound (non-transferable) NFTs for achievements
+
+**Key Features**:
+
+- ERC-721 compliant with transfer restrictions
+- 8 achievement types (FirstSession, FirstWin, HighAccuracy, etc.)
+- IPFS metadata integration
+- Batch minting for gas efficiency
+- Achievement revocation for moderation
+
+**Security**:
+
+- Soulbound logic prevents transfers (except burning)
+- Authorized minters pattern
+- Duplicate achievement prevention
+- ReentrancyGuard on minting functions
 
 ## State Flow
 
