@@ -3,6 +3,7 @@ pragma solidity ^0.8.24;
 
 import "forge-std/Script.sol";
 import "../src/SessionFactory.sol";
+import "../src/AssessmentManager.sol";
 
 /// @title DeployMainnet
 /// @notice Mainnet deployment script for Veridium contracts
@@ -16,6 +17,10 @@ contract DeployMainnet is Script {
         address platformWallet = vm.envAddress("PLATFORM_WALLET");
 
         vm.startBroadcast(deployerPrivateKey);
+
+        // Deploy AssessmentManager
+        AssessmentManager assessmentManager = new AssessmentManager();
+        console.log("AssessmentManager deployed at:", address(assessmentManager));
 
         // Deploy SessionFactory with real USDC
         SessionFactory factory = new SessionFactory(USDC_MAINNET, platformWallet);
