@@ -80,6 +80,54 @@ forge script script/DeployMainnet.s.sol:DeployMainnet --rpc-url base_mainnet --b
 - Access control via Ownable pattern
 - SafeERC20 for token transfers
 
+## Testing
+
+Comprehensive test suite with 51+ tests covering:
+
+### Test Types
+
+- **Unit Tests**: Individual contract function testing
+  - `SessionFactory.t.sol`: 20 tests
+  - `WagerPool.t.sol`: 17 tests
+- **Integration Tests**: End-to-end workflow testing
+  - `Integration.t.sol`: 8 complete scenario tests
+- **Fuzz Tests**: Property-based testing with random inputs
+  - `WagerPoolFuzz.t.sol`: 6 fuzz tests with 256 runs each
+
+### Running Tests
+
+```bash
+# Run all tests
+forge test
+
+# Run with verbosity
+forge test -vv
+
+# Run specific test file
+forge test --match-path test/WagerPool.t.sol
+
+# Run specific test
+forge test --match-test testDepositWagerCreator
+
+# Generate gas report
+forge test --gas-report
+```
+
+### Test Coverage
+
+The test suite covers:
+
+- Wager deposit flows (creator and challenger)
+- Session state transitions
+- Prize distribution calculations
+- Platform fee and evaluator rewards
+- Evaluation period mechanics
+- Cancellation and refund logic
+- Access control enforcement
+- Input validation and edge cases
+- Reentrancy protection
+- Gas optimization verification
+
 ## License
 
 MIT
