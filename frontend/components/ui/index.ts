@@ -10,3 +10,4 @@ export {
   type CardProps,
 } from './Card';
 export { Badge, type BadgeProps } from './Badge';
+export { Alert } from './Alert';\nexport { Modal } from './Modal';\nexport { Spinner } from './Spinner';\nexport { ErrorBoundary } from './ErrorBoundary';
