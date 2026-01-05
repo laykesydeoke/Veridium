@@ -9,6 +9,7 @@ Veridium's smart contract architecture is designed for security, gas efficiency,
 ```
 SessionFactory (Main Entry Point)
     ├─> WagerPool (Per-Session Instance)
+    ├─> AssessmentManager (Evaluation & Scoring)
     └─> Libraries
             ├─> Constants
             └─> Errors
@@ -47,6 +48,27 @@ SessionFactory (Main Entry Point)
 - SafeERC20 for token transfers
 - Access control via Ownable
 - Status-based modifiers
+
+### AssessmentManager.sol
+
+**Purpose**: Manages session evaluations, weighted scoring, and result calculation
+
+**Key Features**:
+
+- Handles evaluator submissions and duplicate prevention
+- Implements weighted scoring algorithm based on evaluator credibility
+- Calculates final session results using majority weighted voting
+- Manages evaluator reward distribution
+- Enforces minimum evaluation thresholds (3+ evaluations)
+- Prevents participants from evaluating their own sessions
+- Integrates with CredibilityRegistry for evaluator weights
+
+**Security**:
+
+- ReentrancyGuard on all state-changing functions
+- Access control via Ownable for result finalization
+- Eligibility checks to prevent conflicts of interest
+- Duplicate evaluation prevention
 
 ## State Flow
 
