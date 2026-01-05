@@ -9,18 +9,23 @@ Smart contracts for the Veridium discourse platform built on Base.
 - **SessionFactory.sol**: Factory contract for creating discourse sessions
 - **WagerPool.sol**: Manages wagers and prize distribution for individual sessions
 - **AssessmentManager.sol**: Manages session evaluations, weighted scoring, and results
+- **CredibilityRegistry.sol**: Onchain reputation tracking for participants and evaluators
+- **AchievementNFT.sol**: Soulbound NFTs for discourse achievements (ERC-721)
 
 ### Interfaces
 
 - **ISessionFactory.sol**: SessionFactory interface
 - **IWagerPool.sol**: WagerPool interface
 - **IAssessmentManager.sol**: AssessmentManager interface
+- **ICredibilityRegistry.sol**: CredibilityRegistry interface
+- **IAchievementNFT.sol**: AchievementNFT interface
 
 ### Libraries
 
 - **AssessmentLib.sol**: Utility functions for assessment calculations
 - **AssessmentErrors.sol**: Custom errors for assessment operations
 - **AssessmentConstants.sol**: Centralized constants for gas optimization
+- **AchievementUnlocker.sol**: Helper functions for checking achievement unlock conditions
 
 ### Mocks
 
@@ -99,8 +104,32 @@ forge script script/DeployMainnet.s.sol:DeployMainnet --rpc-url base_mainnet --b
 ### Integration Points
 
 - Connects with WagerPool for session validation
-- Future integration with CredibilityRegistry for dynamic weights
+- Integrated with CredibilityRegistry for dynamic weights
 - Supports evaluator reward distribution
+
+## Reputation & Achievements
+
+### CredibilityRegistry Features
+
+- **Onchain Reputation**: Tracks credibility scores based on participation and performance
+- **Dynamic Weights**: Evaluator weights calculated from credibility (100-1000 range)
+- **Eligibility**: Minimum 50 credibility required to evaluate sessions
+- **Metrics**: Win rate, evaluation accuracy, session participation tracking
+- **History**: Full credibility change history for transparency
+- **Leaderboard**: Query top users by credibility score
+
+### AchievementNFT Features
+
+- **Soulbound Tokens**: Non-transferable NFTs that stay with the recipient
+- **8 Achievement Types**:
+  - FirstSession, FirstWin, FirstEvaluation
+  - TenSessions, FiftySessions
+  - HighAccuracy (80%+ evaluation accuracy)
+  - Legendary (100+ credibility)
+  - Champion (10+ wins)
+- **IPFS Metadata**: Achievement details stored on IPFS
+- **Batch Minting**: Gas-efficient batch operations
+- **Moderation**: Achievement revocation for fraud cases
 
 ## Security
 
