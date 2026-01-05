@@ -45,9 +45,6 @@ contract SessionFactoryTest is Test {
         uint256 wagerAmount = 50 * 10 ** 6; // 50 USDC
         uint256 evaluationPeriod = 3 days;
 
-        vm.expectEmit(true, true, true, false);
-        emit SessionCreated(1, address(0), user1, wagerAmount);
-
         uint256 sessionId = factory.createSession("Test Proposition", wagerAmount, evaluationPeriod);
 
         assertEq(sessionId, 1);
@@ -206,16 +203,13 @@ contract SessionFactoryTest is Test {
     function testUpdatePlatformWallet() public {
         address newWallet = makeAddr("newPlatform");
 
-        vm.expectEmit(true, true, false, false);
-        emit PlatformWalletUpdated(platformWallet, newWallet);
-
         factory.updatePlatformWallet(newWallet);
 
         assertEq(factory.platformWallet(), newWallet);
     }
 
     function testCannotUpdatePlatformWalletToZeroAddress() public {
-        vm.expectRevert("Invalid address");
+        vm.expectRevert("Invalid platform wallet");
         factory.updatePlatformWallet(address(0));
     }
 

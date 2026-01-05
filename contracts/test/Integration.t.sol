@@ -75,7 +75,7 @@ contract IntegrationTest is Test {
         assertEq(uint8(pool.getStatus()), uint8(IWagerPool.SessionStatus.Active));
 
         // 4. Backend starts evaluation period
-        vm.prank(owner);
+        vm.prank(address(factory));
         pool.startEvaluation(EVALUATION_PERIOD);
 
         assertEq(uint8(pool.getStatus()), uint8(IWagerPool.SessionStatus.Evaluating));
@@ -88,7 +88,7 @@ contract IntegrationTest is Test {
         uint256 creatorBalanceBefore = usdc.balanceOf(creator);
         uint256 platformBalanceBefore = usdc.balanceOf(platformWallet);
 
-        vm.prank(owner);
+        vm.prank(address(factory));
         pool.distributePrizes(creator);
 
         uint256 totalPool = WAGER_AMOUNT * 2;
@@ -100,8 +100,8 @@ contract IntegrationTest is Test {
         assertEq(usdc.balanceOf(platformWallet), platformBalanceBefore + platformFee);
         assertEq(uint8(pool.getStatus()), uint8(IWagerPool.SessionStatus.Completed));
 
-        // 7. Verify evaluator rewards sent to owner (for backend distribution)
-        assertEq(usdc.balanceOf(owner), evaluatorRewards);
+        // 7. Verify evaluator rewards sent to pool owner (factory) for backend distribution
+        assertEq(usdc.balanceOf(address(factory)), evaluatorRewards);
     }
 
     /// @notice Test complete successful session flow with challenger winning
@@ -129,7 +129,7 @@ contract IntegrationTest is Test {
         vm.stopPrank();
 
         // Start evaluation
-        vm.prank(owner);
+        vm.prank(address(factory));
         pool.startEvaluation(EVALUATION_PERIOD);
 
         vm.warp(block.timestamp + EVALUATION_PERIOD + 1);
@@ -138,7 +138,7 @@ contract IntegrationTest is Test {
         uint256 challengerBalanceBefore = usdc.balanceOf(challenger);
         uint256 platformBalanceBefore = usdc.balanceOf(platformWallet);
 
-        vm.prank(owner);
+        vm.prank(address(factory));
         pool.distributePrizes(challenger);
 
         uint256 totalPool = WAGER_AMOUNT * 2;
@@ -172,7 +172,7 @@ contract IntegrationTest is Test {
         uint256 creatorBalanceBefore = usdc.balanceOf(creator);
 
         // Session gets cancelled (no challenger joined)
-        vm.prank(owner);
+        vm.prank(address(factory));
         pool.cancelSession();
 
         // Creator gets full refund
@@ -262,12 +262,12 @@ contract IntegrationTest is Test {
         pool.depositWager(challenger);
         vm.stopPrank();
 
-        vm.prank(owner);
+        vm.prank(address(factory));
         pool.startEvaluation(3 days);
 
         vm.warp(block.timestamp + 3 days + 1);
 
-        vm.prank(owner);
+        vm.prank(address(factory));
         pool.distributePrizes(creator);
 
         assertEq(uint8(pool.getStatus()), uint8(IWagerPool.SessionStatus.Completed));
@@ -294,14 +294,14 @@ contract IntegrationTest is Test {
         pool.depositWager(challenger);
         vm.stopPrank();
 
-        vm.prank(owner);
+        vm.prank(address(factory));
         pool.startEvaluation(3 days);
 
         vm.warp(block.timestamp + 3 days + 1);
 
         uint256 creatorBalanceBefore = usdc.balanceOf(creator);
 
-        vm.prank(owner);
+        vm.prank(address(factory));
         pool.distributePrizes(creator);
 
         // Verify large amounts are handled correctly
@@ -336,7 +336,7 @@ contract IntegrationTest is Test {
         uint256 challengerBalanceBefore = usdc.balanceOf(challenger);
 
         // Cancel session
-        vm.prank(owner);
+        vm.prank(address(factory));
         pool.cancelSession();
 
         // Both get refunds
