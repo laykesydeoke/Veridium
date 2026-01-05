@@ -76,7 +76,7 @@ contract IntegrationTest is Test {
 
         // 4. Backend starts evaluation period
         vm.prank(owner);
-        pool.startEvaluationPeriod(EVALUATION_PERIOD);
+        pool.startEvaluation(EVALUATION_PERIOD);
 
         assertEq(uint8(pool.getStatus()), uint8(IWagerPool.SessionStatus.Evaluating));
         assertEq(pool.evaluationEndTime(), block.timestamp + EVALUATION_PERIOD);
@@ -100,20 +100,8 @@ contract IntegrationTest is Test {
         assertEq(usdc.balanceOf(platformWallet), platformBalanceBefore + platformFee);
         assertEq(uint8(pool.getStatus()), uint8(IWagerPool.SessionStatus.Completed));
 
-        // 7. Distribute evaluator rewards
-        address[] memory evaluators = new address[](3);
-        evaluators[0] = evaluator1;
-        evaluators[1] = evaluator2;
-        evaluators[2] = evaluator3;
-
-        vm.prank(owner);
-        pool.distributeEvaluatorRewards(evaluators);
-
-        uint256 rewardPerEvaluator = evaluatorRewards / 3;
-
-        assertApproxEqAbs(usdc.balanceOf(evaluator1), rewardPerEvaluator, 3);
-        assertApproxEqAbs(usdc.balanceOf(evaluator2), rewardPerEvaluator, 3);
-        assertApproxEqAbs(usdc.balanceOf(evaluator3), rewardPerEvaluator, 3);
+        // 7. Verify evaluator rewards sent to owner (for backend distribution)
+        assertEq(usdc.balanceOf(owner), evaluatorRewards);
     }
 
     /// @notice Test complete successful session flow with challenger winning
@@ -142,7 +130,7 @@ contract IntegrationTest is Test {
 
         // Start evaluation
         vm.prank(owner);
-        pool.startEvaluationPeriod(EVALUATION_PERIOD);
+        pool.startEvaluation(EVALUATION_PERIOD);
 
         vm.warp(block.timestamp + EVALUATION_PERIOD + 1);
 
@@ -275,7 +263,7 @@ contract IntegrationTest is Test {
         vm.stopPrank();
 
         vm.prank(owner);
-        pool.startEvaluationPeriod(3 days);
+        pool.startEvaluation(3 days);
 
         vm.warp(block.timestamp + 3 days + 1);
 
@@ -307,7 +295,7 @@ contract IntegrationTest is Test {
         vm.stopPrank();
 
         vm.prank(owner);
-        pool.startEvaluationPeriod(3 days);
+        pool.startEvaluation(3 days);
 
         vm.warp(block.timestamp + 3 days + 1);
 

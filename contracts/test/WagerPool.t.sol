@@ -141,7 +141,7 @@ contract WagerPoolTest is Test {
         vm.expectEmit(true, false, false, false);
         emit SessionStatusChanged(IWagerPool.SessionStatus.Evaluating);
 
-        pool.startEvaluationPeriod(evaluationPeriod);
+        pool.startEvaluation(evaluationPeriod);
 
         assertEq(uint8(pool.getStatus()), uint8(IWagerPool.SessionStatus.Evaluating));
         assertEq(pool.evaluationEndTime(), block.timestamp + evaluationPeriod);
@@ -150,7 +150,7 @@ contract WagerPoolTest is Test {
     function testCannotStartEvaluationWhenNotActive() public {
         vm.prank(owner);
         vm.expectRevert();
-        pool.startEvaluationPeriod(evaluationPeriod);
+        pool.startEvaluation(evaluationPeriod);
     }
 
     function testCannotStartEvaluationUnauthorized() public {
@@ -168,7 +168,7 @@ contract WagerPoolTest is Test {
         // Try to start evaluation as non-owner
         vm.prank(creator);
         vm.expectRevert();
-        pool.startEvaluationPeriod(evaluationPeriod);
+        pool.startEvaluation(evaluationPeriod);
     }
 
     // ============ Prize Distribution Tests ============
@@ -247,43 +247,7 @@ contract WagerPoolTest is Test {
 
     // ============ Evaluator Rewards Tests ============
 
-    function testDistributeEvaluatorRewards() public {
-        _setupCompletedSession();
 
-        // Distribute prizes first
-        vm.prank(owner);
-        pool.distributePrizes(creator);
-
-        // Setup evaluators
-        address[] memory evaluators = new address[](2);
-        evaluators[0] = evaluator1;
-        evaluators[1] = evaluator2;
-
-        uint256 eval1BalanceBefore = usdc.balanceOf(evaluator1);
-        uint256 eval2BalanceBefore = usdc.balanceOf(evaluator2);
-
-        // Distribute evaluator rewards
-        vm.prank(owner);
-        pool.distributeEvaluatorRewards(evaluators);
-
-        uint256 totalPool = wagerAmount * 2;
-        uint256 totalRewards = (totalPool * 1000) / 10000; // 10%
-        uint256 rewardPerEvaluator = totalRewards / 2;
-
-        assertEq(usdc.balanceOf(evaluator1), eval1BalanceBefore + rewardPerEvaluator);
-        assertEq(usdc.balanceOf(evaluator2), eval2BalanceBefore + rewardPerEvaluator);
-    }
-
-    function testCannotDistributeEvaluatorRewardsBeforePrizes() public {
-        _setupCompletedSession();
-
-        address[] memory evaluators = new address[](1);
-        evaluators[0] = evaluator1;
-
-        vm.prank(owner);
-        vm.expectRevert();
-        pool.distributeEvaluatorRewards(evaluators);
-    }
 
     // ============ Cancellation Tests ============
 
@@ -355,7 +319,7 @@ contract WagerPoolTest is Test {
 
         // Start evaluation
         vm.prank(owner);
-        pool.startEvaluationPeriod(evaluationPeriod);
+        pool.startEvaluation(evaluationPeriod);
 
         // Fast forward past evaluation period
         vm.warp(block.timestamp + evaluationPeriod + 1);

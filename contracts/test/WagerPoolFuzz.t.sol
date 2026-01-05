@@ -65,7 +65,7 @@ contract WagerPoolFuzzTest is Test {
 
         // Start evaluation and complete
         vm.prank(address(factory));
-        pool.startEvaluationPeriod(3 days);
+        pool.startEvaluation(3 days);
 
         vm.warp(block.timestamp + 3 days + 1);
 
@@ -110,7 +110,7 @@ contract WagerPoolFuzzTest is Test {
 
         // Start evaluation
         vm.prank(address(factory));
-        pool.startEvaluationPeriod(duration);
+        pool.startEvaluation(duration);
 
         assertEq(pool.evaluationEndTime(), block.timestamp + duration);
 
@@ -128,10 +128,8 @@ contract WagerPoolFuzzTest is Test {
         assertEq(uint8(pool.getStatus()), uint8(IWagerPool.SessionStatus.Completed));
     }
 
-    /// @notice Fuzz test for evaluator rewards distribution
-    function testFuzz_EvaluatorRewards(uint8 numEvaluators, uint256 wagerAmount) public {
-        // Bound evaluators to reasonable range
-        numEvaluators = uint8(bound(numEvaluators, 1, 20));
+    /// @notice Fuzz test for evaluator rewards sent to owner
+    function testFuzz_EvaluatorRewardsToOwner(uint256 wagerAmount) public {
         wagerAmount = bound(wagerAmount, 5 * 10 ** 6, 1000 * 10 ** 6);
 
         // Create and complete session
@@ -152,33 +150,18 @@ contract WagerPoolFuzzTest is Test {
         vm.stopPrank();
 
         vm.prank(address(factory));
-        pool.startEvaluationPeriod(3 days);
+        pool.startEvaluation(3 days);
 
         vm.warp(block.timestamp + 3 days + 1);
 
         vm.prank(address(factory));
         pool.distributePrizes(creator);
 
-        // Create evaluators array
-        address[] memory evaluators = new address[](numEvaluators);
-        for (uint8 i = 0; i < numEvaluators; i++) {
-            evaluators[i] = makeAddr(string(abi.encodePacked("evaluator", i)));
-        }
-
+        // Verify evaluator rewards sent to owner
         uint256 totalPool = wagerAmount * 2;
-        uint256 totalRewards = (totalPool * 1000) / 10000;
-        uint256 expectedRewardPerEvaluator = totalRewards / numEvaluators;
+        uint256 expectedRewards = (totalPool * 1000) / 10000;
 
-        // Distribute rewards
-        vm.prank(address(factory));
-        pool.distributeEvaluatorRewards(evaluators);
-
-        // Verify each evaluator received correct amount
-        for (uint8 i = 0; i < numEvaluators; i++) {
-            uint256 balance = usdc.balanceOf(evaluators[i]);
-            // Allow for small rounding differences
-            assertApproxEqAbs(balance, expectedRewardPerEvaluator, numEvaluators);
-        }
+        assertEq(usdc.balanceOf(address(factory)), expectedRewards);
     }
 
     /// @notice Fuzz test that invalid wager amounts are rejected
