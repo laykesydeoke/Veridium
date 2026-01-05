@@ -173,6 +173,27 @@ contract AssessmentManager is IAssessmentManager, Ownable, ReentrancyGuard {
         credibilityRegistry = _credibilityRegistry;
     }
 
+    /// @notice Check if session has minimum evaluations
+    /// @param sessionId The session ID
+    /// @return hasMinimum True if session has minimum evaluations
+    function hasMinimumEvaluations(uint256 sessionId) external view returns (bool hasMinimum) {
+        return sessionEvaluators[sessionId].length >= MIN_EVALUATIONS;
+    }
+
+    /// @notice Get session scores
+    /// @param sessionId The session ID
+    /// @return creatorScore Creator's weighted score
+    /// @return challengerScore Challenger's weighted score
+    /// @return drawScore Draw weighted score
+    function getSessionScores(uint256 sessionId)
+        external
+        view
+        returns (uint256 creatorScore, uint256 challengerScore, uint256 drawScore)
+    {
+        SessionResult memory result = sessionResults[sessionId];
+        return (result.creatorScore, result.challengerScore, result.drawScore);
+    }
+
     /// @notice Get evaluator weight based on credibility
     /// @param evaluator The evaluator address
     /// @return weight The evaluator's weight
