@@ -1,0 +1,1 @@
+'use client';\n\nimport { useState } from 'react';\n\nexport function useModal() {\n  const [isOpen, setIsOpen] = useState(false);\n  return { isOpen, open: () => setIsOpen(true), close: () => setIsOpen(false) };\n}
