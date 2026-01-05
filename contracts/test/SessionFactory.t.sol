@@ -6,6 +6,9 @@ import "../src/SessionFactory.sol";
 import "../src/WagerPool.sol";
 import "../src/mocks/MockUSDC.sol";
 
+/// @title SessionFactory Unit Tests
+/// @notice Comprehensive tests for SessionFactory contract functionality
+/// @dev Tests cover session creation, wager validation, platform wallet management, and access control
 contract SessionFactoryTest is Test {
     SessionFactory factory;
     MockUSDC usdc;

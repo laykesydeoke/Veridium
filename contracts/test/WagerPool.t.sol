@@ -5,6 +5,9 @@ import "forge-std/Test.sol";
 import "../src/WagerPool.sol";
 import "../src/mocks/MockUSDC.sol";
 
+/// @title WagerPool Unit Tests
+/// @notice Comprehensive tests for WagerPool contract functionality
+/// @dev Tests cover deposit flows, prize distribution, evaluation periods, and access control
 contract WagerPoolTest is Test {
     WagerPool pool;
     MockUSDC usdc;
