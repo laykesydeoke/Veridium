@@ -12,6 +12,9 @@ import { healthRoutes } from './routes/health';
 import { authRoutes } from './routes/auth';
 import { sessionRoutes } from './routes/sessions';
 import { userRoutes } from './routes/users';
+import { argumentRoutes } from './routes/arguments';
+import { achievementRoutes } from './routes/achievements';
+import { leaderboardRoutes } from './routes/leaderboard';
 
 export const buildServer = async () => {
   const server = Fastify({
@@ -82,6 +85,9 @@ export const buildServer = async () => {
   await server.register(authRoutes, { prefix: '/api' });
   await server.register(sessionRoutes, { prefix: '/api' });
   await server.register(userRoutes, { prefix: '/api' });
+  await server.register(argumentRoutes, { prefix: '/api' });
+  await server.register(achievementRoutes, { prefix: '/api' });
+  await server.register(leaderboardRoutes, { prefix: '/api' });
 
   return server;
 };
