@@ -10,7 +10,9 @@
     "migrate": "tsx src/db/migrate.ts",
     "migrate:rollback": "tsx src/db/migrate.ts rollback",
     "seed": "tsx src/db/seed.ts",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "type-check": "tsc --noEmit",
+    "lint": "echo \"Linting not configured yet\""
   },
   "keywords": [],
   "author": "",
