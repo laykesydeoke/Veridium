@@ -245,6 +245,65 @@ export const EventQueue = {
   },
 
   /**
+   * Batch enqueue multiple events
+   */
+  async batchEnqueue(
+    events: Array<{
+      contractAddress: string;
+      eventName: string;
+      eventData: any;
+      priority?: number;
+    }>
+  ): Promise<number> {
+    if (events.length === 0) return 0;
+
+    const values = events.map((e, i) => {
+      const offset = i * 5;
+      return `($${offset + 1}, $${offset + 2}, $${offset + 3}, $${offset + 4}, $${offset + 5})`;
+    }).join(', ');
+
+    const params = events.flatMap(e => [
+      e.contractAddress.toLowerCase(),
+      e.eventName,
+      JSON.stringify(e.eventData),
+      e.priority || 0,
+      new Date(),
+    ]);
+
+    const result = await pool.query(
+      `INSERT INTO event_queue (contract_address, event_name, event_data, priority, scheduled_for)
+       VALUES ${values}`,
+      params
+    );
+
+    return result.rowCount || 0;
+  },
+
+  /**
+   * Get queue depth by status
+   */
+  async getQueueDepth(): Promise<{ status: string; count: number }[]> {
+    const result = await pool.query(
+      `SELECT status, COUNT(*) as count
+       FROM event_queue
+       GROUP BY status`
+    );
+    return result.rows.map(r => ({ status: r.status, count: parseInt(r.count) }));
+  },
+
+  /**
+   * Get average processing time
+   */
+  async getAverageProcessingTime(): Promise<number> {
+    const result = await pool.query(
+      `SELECT AVG(EXTRACT(EPOCH FROM (completed_at - started_at))) as avg_seconds
+       FROM event_queue
+       WHERE status = 'completed' AND started_at IS NOT NULL AND completed_at IS NOT NULL`
+    );
+    return parseFloat(result.rows[0]?.avg_seconds || 0);
+  },
+
+  /**
    * Map database row to QueuedEvent
    */
   mapQueuedEvent(row: any): QueuedEvent {
