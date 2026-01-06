@@ -11,6 +11,7 @@ import { authMiddleware } from './middleware/auth';
 import { healthRoutes } from './routes/health';
 import { authRoutes } from './routes/auth';
 import { sessionRoutes } from './routes/sessions';
+import { userRoutes } from './routes/users';
 
 export const buildServer = async () => {
   const server = Fastify({
@@ -80,6 +81,7 @@ export const buildServer = async () => {
   await server.register(healthRoutes);
   await server.register(authRoutes, { prefix: '/api' });
   await server.register(sessionRoutes, { prefix: '/api' });
+  await server.register(userRoutes, { prefix: '/api' });
 
   return server;
 };
