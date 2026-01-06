@@ -3,6 +3,9 @@ import { env } from './config/env';
 import { pool } from './config/database';
 import { redis } from './config/redis';
 import { SessionCron } from './services/sessionCron';
+import { EventWatcher } from './services/eventWatcher';
+import { EventQueue } from './services/eventQueue';
+import { EventCron } from './services/eventCron';
 
 const start = async () => {
   try {
@@ -14,14 +17,31 @@ const start = async () => {
     });
 
     // Start session expiration cron job
-    const cronInterval = SessionCron.startExpirationCron();
+    const sessionCronInterval = SessionCron.startExpirationCron();
     server.log.info('Session expiration cron job started');
+
+    // Initialize event listener system
+    await EventWatcher.initialize();
+    server.log.info('Event watchers initialized');
+
+    // Start event queue worker
+    const queueWorkerInterval = EventQueue.startWorker();
+    server.log.info('Event queue worker started');
+
+    // Start event maintenance cron
+    const eventCronInterval = EventCron.startMaintenanceCron();
+    server.log.info('Event maintenance cron job started');
 
     const shutdown = async () => {
       server.log.info('Shutting down gracefully...');
 
-      // Stop cron job
-      SessionCron.stopCron(cronInterval);
+      // Stop cron jobs
+      SessionCron.stopCron(sessionCronInterval);
+      clearInterval(queueWorkerInterval);
+      clearInterval(eventCronInterval);
+
+      // Stop event watchers
+      EventWatcher.stopAll();
 
       await server.close();
       await pool.end();
