@@ -18,6 +18,7 @@ import { leaderboardRoutes } from './routes/leaderboard';
 import { profileRoutes } from './routes/profiles';
 import { basenameRoutes } from './routes/basename';
 import { sessionStatsRoutes } from './routes/sessionStats';
+import { eventRoutes } from './routes/events';
 
 export const buildServer = async () => {
   const server = Fastify({
@@ -94,6 +95,7 @@ export const buildServer = async () => {
   await server.register(profileRoutes, { prefix: '/api' });
   await server.register(basenameRoutes, { prefix: '/api' });
   await server.register(sessionStatsRoutes, { prefix: '/api' });
+  await server.register(eventRoutes, { prefix: '/api' });
 
   return server;
 };

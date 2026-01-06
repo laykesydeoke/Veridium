@@ -17,6 +17,8 @@ const envSchema = z.object({
   CREDIBILITY_REGISTRY_ADDRESS: z.string().optional(),
   ASSESSMENT_MANAGER_ADDRESS: z.string().optional(),
   WAGER_POOL_ADDRESS: z.string().optional(),
+  ACHIEVEMENT_NFT_ADDRESS: z.string().optional(),
+  CREDIBILITY_TRACKER_ADDRESS: z.string().optional(),
   PINATA_API_KEY: z.string().optional(),
   PINATA_SECRET_KEY: z.string().optional(),
   PINATA_JWT: z.string().optional(),
