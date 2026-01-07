@@ -19,6 +19,7 @@ import { profileRoutes } from './routes/profiles';
 import { basenameRoutes } from './routes/basename';
 import { sessionStatsRoutes } from './routes/sessionStats';
 import { eventRoutes } from './routes/events';
+import { evaluationRoutes } from './routes/evaluations';
 
 export const buildServer = async () => {
   const server = Fastify({
@@ -96,6 +97,7 @@ export const buildServer = async () => {
   await server.register(basenameRoutes, { prefix: '/api' });
   await server.register(sessionStatsRoutes, { prefix: '/api' });
   await server.register(eventRoutes, { prefix: '/api' });
+  await server.register(evaluationRoutes, { prefix: '/api' });
 
   return server;
 };
