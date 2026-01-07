@@ -52,6 +52,7 @@ backend/
 │   ├── index.ts         # Application entry point
 │   └── server.ts        # Fastify server setup
 ├── EVENT_LISTENER.md    # Event listener documentation
+├── EVALUATION_SYSTEM.md # Evaluation & scoring system documentation
 ├── DATABASE.md          # Database schema documentation
 ├── BASENAME_SERVICE.md  # Basename service documentation
 └── package.json
@@ -191,6 +192,18 @@ Real-time synchronization with smart contracts:
 
 See [EVENT_LISTENER.md](./EVENT_LISTENER.md) for details.
 
+### Evaluation & Scoring System
+
+Weighted voting with credibility-based scoring:
+
+- **Weighted Scoring**: Multi-factor algorithm (credibility, confidence, timing, quality)
+- **Outcome Calculation**: Determines winners with tie-breaking logic
+- **Spam Prevention**: Advanced detection and filtering
+- **Analytics**: Performance tracking and insights
+- **Auto-Finalization**: Automatic result calculation when voting ends
+
+See [EVALUATION_SYSTEM.md](./EVALUATION_SYSTEM.md) for details.
+
 ### Credibility System
 
 Track user credibility based on:
@@ -225,6 +238,17 @@ Track user credibility based on:
 - `GET /api/events/health` - Processing health
 - `GET /api/events/logs` - Recent event logs
 - `POST /api/events/replay` - Replay missed events (admin)
+
+### Evaluations
+- `POST /api/evaluations` - Submit evaluation
+- `GET /api/evaluations/session/:sessionId` - Get session evaluations
+- `GET /api/evaluations/user/:address` - Get user's evaluations
+- `GET /api/evaluations/assessment/:sessionId` - Aggregated assessment
+- `GET /api/evaluations/metrics/:sessionId` - Quality metrics
+- `GET /api/evaluations/progress/:sessionId` - Real-time progress
+- `GET /api/evaluations/outcome/:sessionId` - Outcome prediction
+- `GET /api/evaluations/eligibility/:sessionId` - Check eligibility
+- `POST /api/evaluations/finalize/:sessionId` - Finalize results (admin)
 
 ### Profiles
 - `GET /api/profiles/:address` - Get user profile

@@ -6,6 +6,7 @@ import { SessionCron } from './services/sessionCron';
 import { EventWatcher } from './services/eventWatcher';
 import { EventQueue } from './services/eventQueue';
 import { EventCron } from './services/eventCron';
+import { EvaluationPeriodManager } from './services/evaluationPeriodManager';
 
 const start = async () => {
   try {
@@ -32,6 +33,10 @@ const start = async () => {
     const eventCronInterval = EventCron.startMaintenanceCron();
     server.log.info('Event maintenance cron job started');
 
+    // Start evaluation period finalization cron
+    const evaluationCronInterval = EvaluationPeriodManager.startFinalizationCron();
+    server.log.info('Evaluation finalization cron job started');
+
     const shutdown = async () => {
       server.log.info('Shutting down gracefully...');
 
@@ -39,6 +44,7 @@ const start = async () => {
       SessionCron.stopCron(sessionCronInterval);
       clearInterval(queueWorkerInterval);
       clearInterval(eventCronInterval);
+      clearInterval(evaluationCronInterval);
 
       // Stop event watchers
       EventWatcher.stopAll();
